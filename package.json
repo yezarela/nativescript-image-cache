@@ -1,6 +1,6 @@
 {
   "name": "nativescript-image-cache",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Nativescript image caching plugin using Fresco for Android and SDWebImageCache for iOS",
   "main": "ns-image-cache",
   "nativescript": {

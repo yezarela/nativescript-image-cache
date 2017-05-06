@@ -1,4 +1,4 @@
-import { NSImageCacheBase, srcProperty, isLoadingProperty } from "./ns-image-cache-common";
+import { NSImageBase, srcProperty, isLoadingProperty } from "./ns-image-cache-common";
 import { View, Property, booleanConverter } from "ui/core/view";
 import * as application from "application";
 import * as platform from "platform";
@@ -21,49 +21,49 @@ export module ScaleType {
 }
 
 
-export const stretchProperty = new Property<NSImageCacheBase, string>({
+export const stretchProperty = new Property<NSImageBase, string>({
     name: "stretch",
     defaultValue: ScaleType.none,
     valueConverter: (v) => v,
     affectsLayout: true
 });
-stretchProperty.register(NSImageCacheBase)
+stretchProperty.register(NSImageBase)
 
 
-export const radiusProperty = new Property<NSImageCacheBase, number>({
+export const radiusProperty = new Property<NSImageBase, number>({
     name: "radius",
     defaultValue: undefined,
     valueConverter: (v) => parseFloat(v),
     affectsLayout: true
 });
-radiusProperty.register(NSImageCacheBase)
+radiusProperty.register(NSImageBase)
 
 
-export const roundedProperty = new Property<NSImageCacheBase, boolean>({
+export const roundedProperty = new Property<NSImageBase, boolean>({
     name: "rounded",
     defaultValue: false,
     valueConverter: booleanConverter,
     affectsLayout: true
 });
-roundedProperty.register(NSImageCacheBase)
+roundedProperty.register(NSImageBase)
 
 
-export const placeholderProperty = new Property<NSImageCacheBase, string>({
+export const placeholderProperty = new Property<NSImageBase, string>({
     name: "placeholder",
     defaultValue: undefined,
     valueConverter: (v) => v,
     affectsLayout: true
 });
-placeholderProperty.register(NSImageCacheBase)
+placeholderProperty.register(NSImageBase)
 
 
-export const placeholderStretchProperty = new Property<NSImageCacheBase, string>({
+export const placeholderStretchProperty = new Property<NSImageBase, string>({
     name: "placeholderStretch",
     defaultValue: undefined,
     valueConverter: (v) => v,
     affectsLayout: true
 });
-placeholderStretchProperty.register(NSImageCacheBase)
+placeholderStretchProperty.register(NSImageBase)
 
 
 const ProxyBaseControllerListener = com.facebook.drawee.controller.BaseControllerListener.extend({
@@ -81,7 +81,7 @@ const ProxyBaseControllerListener = com.facebook.drawee.controller.BaseControlle
 });
 
 
-export class NSImageCache extends NSImageCacheBase {
+export class NSImage extends NSImageBase {
 
     public nativeView: com.facebook.drawee.view.SimpleDraweeView;
     public rounded: boolean;
@@ -348,8 +348,8 @@ export function initializeOnAngular() {
     if (false === isInitialized) {
         var _elementRegistry = require("nativescript-angular/element-registry");
 
-        _elementRegistry.registerElement("WebImage", function () {
-            return require("nativescript-web-image-cache").WebImage;
+        _elementRegistry.registerElement("NSImage", function () {
+            return require("nativescript-image-cache").NSImage;
         });
         initialize();
         isInitialized = true;

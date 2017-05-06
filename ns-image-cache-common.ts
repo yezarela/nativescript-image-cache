@@ -1,8 +1,8 @@
 import { View, Property, booleanConverter } from "ui/core/view";
-import { NSImageCache } from "./ns-image-cache";
+import { NSImage } from "./ns-image-cache";
 
-export { NSImageCache };
-export class NSImageCacheBase extends View implements NSImageCache {
+export { NSImage };
+export class NSImageBase extends View implements NSImage {
 
     src: string;
     isLoading: boolean;
@@ -26,15 +26,15 @@ export class NSImageCacheBase extends View implements NSImageCache {
 
 }
 
-export const srcProperty = new Property<NSImageCacheBase, string>({
+export const srcProperty = new Property<NSImageBase, string>({
     name: "src",
     defaultValue: undefined,
 });
-srcProperty.register(NSImageCacheBase);
+srcProperty.register(NSImageBase);
 
-export const isLoadingProperty = new Property<NSImageCacheBase, boolean>({
+export const isLoadingProperty = new Property<NSImageBase, boolean>({
     name: "isLoading",
     defaultValue: true,
     valueConverter: booleanConverter
 });
-isLoadingProperty.register(NSImageCacheBase);
+isLoadingProperty.register(NSImageBase);

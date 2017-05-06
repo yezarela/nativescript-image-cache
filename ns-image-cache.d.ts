@@ -1,6 +1,6 @@
 import { View } from 'ui/core/view';
 
-export class NSImageCache extends View {
+export class NSImage extends View {
     /**
      * Image src, either res://, http://, ~/... or absolute path
      */
