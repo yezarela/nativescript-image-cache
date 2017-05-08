@@ -44,12 +44,14 @@ IF on android, need to initialise the plugin before using or clearing the cache,
 
 **Initialising on android - in app.js**
 
+```
     var imageCache = require("nativescript-image-cache");
     if (application.android) {
-        application.onLaunch = function (intent) {
-                imageCache.initialize();
-        };
+        application.on("launch", () => {
+            imageCache.initialize();
+        });
     }
+```
 
 After initialisation, add the namespace attribute    `xmlns:IC="nativescript-image-cache"` to the opening page tag of xml. The markup tag `<IC:NSImage></IC:NSImage>` should be used to denote images.
 

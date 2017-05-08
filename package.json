@@ -1,6 +1,6 @@
 {
   "name": "nativescript-image-cache",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Nativescript image caching plugin using Fresco for Android and SDWebImageCache for iOS",
   "main": "ns-image-cache",
   "nativescript": {
@@ -28,7 +28,7 @@
     "url": "https://github.com/yezarela/nativescript-image-cache/issues"
   },
   "homepage": "https://github.com/yezarela/nativescript-image-cache#readme",
-  "typings": "web-image.d.ts",
+  "typings": "ns-image-cache.d.ts",
   "dependencies": {},
   "devDependencies": {
     "tns-core-modules": "^3.0.0",
