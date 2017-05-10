@@ -68,7 +68,9 @@ export class NSImage extends NSImageBase {
     }
 
     [stretchProperty.setNative](value: string) {
-        if (value) { }
+        if (value) {
+            this.setNativeStretch(value);
+        }
     }
 
     [placeholderProperty.getDefault](): number {
@@ -79,6 +81,10 @@ export class NSImage extends NSImageBase {
         if (value) { }
     }
 
+    setNativeStretch(stretch: string) {
+        let scaleType = getScaleType(stretch) || getScaleType(ScaleType.none);
+        this.nativeView.contentMode = scaleType;
+    }
 
     onMeasure(widthMeasureSpec, heightMeasureSpec) {
         var utils = require("utils/utils");
