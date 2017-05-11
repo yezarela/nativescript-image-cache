@@ -1,4 +1,7 @@
 # Nativescript Image Cache
+
+[![npm version](https://badge.fury.io/js/nativescript-image-cache.svg)](https://badge.fury.io/js/nativescript-image-cache)
+
 Nativescript image caching plugin using Fresco for Android and SDWebImageCache for iOS
 
 ## Installation 
