@@ -9,27 +9,10 @@ import * as types from "utils/types"
 import * as fs from "file-system"
 import * as imageSource from "image-source"
 
+import { layout } from "utils/utils";
 
 export { srcProperty, isLoadingProperty };
 export let isInitialized = false
-
-
-export module ScaleType {
-    export var none = "none";
-    export var aspectFill = "aspectFill";
-    export var aspectFit = "aspectFit";
-    export var fill = "fill";
-}
-
-
-export const stretchProperty = new Property<NSImageBase, string>({
-    name: "stretch",
-    defaultValue: ScaleType.none,
-    valueConverter: (v) => v,
-    affectsLayout: true
-});
-stretchProperty.register(NSImageBase)
-
 
 export const placeholderProperty = new Property<NSImageBase, string>({
     name: "placeholder",
@@ -39,11 +22,19 @@ export const placeholderProperty = new Property<NSImageBase, string>({
 });
 placeholderProperty.register(NSImageBase)
 
+export const stretchProperty = new Property<NSImageBase, string>({
+    name: "stretch",
+    defaultValue: "aspectFit",
+    affectsLayout: true
+});
+stretchProperty.register(NSImageBase);
+
 
 export class NSImage extends NSImageBase {
 
     public nativeView: UIImageView;
     public placeholder: string;
+    private _imageSourceAffectsLayout: boolean = true;
 
     constructor() {
         super();
@@ -63,16 +54,6 @@ export class NSImage extends NSImageBase {
         }
     }
 
-    [stretchProperty.getDefault](): string {
-        return ScaleType.none;
-    }
-
-    [stretchProperty.setNative](value: string) {
-        if (value) {
-            this.setNativeStretch(value);
-        }
-    }
-
     [placeholderProperty.getDefault](): number {
         return undefined;
     }
@@ -81,48 +62,56 @@ export class NSImage extends NSImageBase {
         if (value) { }
     }
 
-    setNativeStretch(stretch: string) {
-        let scaleType = getScaleType(stretch) || getScaleType(ScaleType.none);
-        this.nativeView.contentMode = scaleType;
-    }
+    public onMeasure(widthMeasureSpec, heightMeasureSpec) {
 
-    onMeasure(widthMeasureSpec, heightMeasureSpec) {
-        var utils = require("utils/utils");
-        var width = utils.layout.getMeasureSpecSize(widthMeasureSpec);
-        var widthMode = utils.layout.getMeasureSpecMode(widthMeasureSpec);
-        var height = utils.layout.getMeasureSpecSize(heightMeasureSpec);
-        var heightMode = utils.layout.getMeasureSpecMode(heightMeasureSpec);
-        var nativeWidth = this.nativeView ? (this.nativeView.image ? this.nativeView.image.size.width : 0) : 0;
-        var nativeHeight = this.nativeView ? (this.nativeView.image ? this.nativeView.image.size.height : 0) : 0;
-        var measureWidth = Math.max(nativeWidth, this.minWidth);
-        var measureHeight = Math.max(nativeHeight, this.minHeight);
-        var finiteWidth = widthMode !== utils.layout.UNSPECIFIED;
-        var finiteHeight = heightMode !== utils.layout.UNSPECIFIED;
+        let width = layout.getMeasureSpecSize(widthMeasureSpec);
+        let widthMode = layout.getMeasureSpecMode(widthMeasureSpec);
+
+        let height = layout.getMeasureSpecSize(heightMeasureSpec);
+        let heightMode = layout.getMeasureSpecMode(heightMeasureSpec);
+
+        let nativeWidth = this.nativeView ? layout.toDevicePixels(this.getMeasuredWidth()) : 0;
+        let nativeHeight = this.nativeView ? layout.toDevicePixels(this.getMeasuredHeight()) : 0;
+
+        let measureWidth = Math.max(nativeWidth, this.effectiveMinWidth);
+        let measureHeight = Math.max(nativeHeight, this.effectiveMinHeight);
+
+        let finiteWidth: boolean = widthMode !== layout.UNSPECIFIED;
+        let finiteHeight: boolean = heightMode !== layout.UNSPECIFIED;
+
+        this._imageSourceAffectsLayout = widthMode !== layout.EXACTLY || heightMode !== layout.EXACTLY;
+
+
         if (nativeWidth !== 0 && nativeHeight !== 0 && (finiteWidth || finiteHeight)) {
-            var scale = this.computeScaleFactor(width, height, finiteWidth, finiteHeight, nativeWidth, nativeHeight, this.stretch);
-            var resultW = Math.floor(nativeWidth * scale.width);
-            var resultH = Math.floor(nativeHeight * scale.height);
+            let scale = NSImage.computeScaleFactor(width, height, finiteWidth, finiteHeight, nativeWidth, nativeHeight, this.stretch);
+            let resultW = Math.round(nativeWidth * scale.width);
+            let resultH = Math.round(nativeHeight * scale.height);
+
             measureWidth = finiteWidth ? Math.min(resultW, width) : resultW;
             measureHeight = finiteHeight ? Math.min(resultH, height) : resultH;
+
             var trace = require("trace");
             trace.write("Image stretch: " + this.stretch +
                 ", nativeWidth: " + nativeWidth +
                 ", nativeHeight: " + nativeHeight, trace.categories.Layout);
         }
         var view = require("ui/core/view");
-        var widthAndState = view.View.resolveSizeAndState(measureWidth, width, widthMode, 0);
-        var heightAndState = view.View.resolveSizeAndState(measureHeight, height, heightMode, 0);
+        let widthAndState = view.View.resolveSizeAndState(measureWidth, width, widthMode, 0);
+        let heightAndState = view.View.resolveSizeAndState(measureHeight, height, heightMode, 0);
         this.setMeasuredDimension(widthAndState, heightAndState);
     }
 
 
-    computeScaleFactor(measureWidth, measureHeight, widthIsFinite, heightIsFinite, nativeWidth, nativeHeight, imageStretch) {
-        var scaleW = 1;
-        var scaleH = 1;
-        if ((imageStretch === enums.Stretch.aspectFill || imageStretch === enums.Stretch.aspectFit || imageStretch === enums.Stretch.fill) &&
+    private static computeScaleFactor(measureWidth: number, measureHeight: number, widthIsFinite: boolean, heightIsFinite: boolean, nativeWidth: number, nativeHeight: number, imageStretch: string): { width: number; height: number } {
+        let scaleW = 1;
+        let scaleH = 1;
+
+        if ((imageStretch === "aspectFill" || imageStretch === "aspectFit" || imageStretch === "fill") &&
             (widthIsFinite || heightIsFinite)) {
+
             scaleW = (nativeWidth > 0) ? measureWidth / nativeWidth : 0;
             scaleH = (nativeHeight > 0) ? measureHeight / nativeHeight : 0;
+
             if (!widthIsFinite) {
                 scaleW = scaleH;
             }
@@ -131,11 +120,11 @@ export class NSImage extends NSImageBase {
             }
             else {
                 switch (imageStretch) {
-                    case enums.Stretch.aspectFit:
+                    case "aspectFit":
                         scaleH = scaleW < scaleH ? scaleW : scaleH;
                         scaleW = scaleH;
                         break;
-                    case enums.Stretch.aspectFill:
+                    case "aspectFill":
                         scaleH = scaleW > scaleH ? scaleW : scaleH;
                         scaleW = scaleH;
                         break;
@@ -145,10 +134,28 @@ export class NSImage extends NSImageBase {
         return { width: scaleW, height: scaleH };
     }
 
+    [stretchProperty.getDefault](): "aspectFit" {
+        return "aspectFit";
+    }
+    [stretchProperty.setNative](value: "none" | "aspectFill" | "aspectFit" | "fill") {
+        switch (value) {
+            case "aspectFit":
+                this.nativeView.contentMode = UIViewContentMode.ScaleAspectFit;
+                break;
+            case "aspectFill":
+                this.nativeView.contentMode = UIViewContentMode.ScaleAspectFill;
+                break;
+            case "fill":
+                this.nativeView.contentMode = UIViewContentMode.ScaleToFill;
+                break;
+            case "none":
+            default:
+                this.nativeView.contentMode = UIViewContentMode.TopLeft;
+                break;
+        }
+    }
 
 }
-
-
 
 function setSource(image, value) {
 
@@ -187,25 +194,6 @@ function setSource(image, value) {
 
 }
 
-
-function getScaleType(scaleType: string) {
-    if (types.isString(scaleType)) {
-        switch (scaleType) {
-            case ScaleType.none:
-                return UIViewContentMode.UIViewContentModeTopLeft;
-            case ScaleType.aspectFill:
-                return UIViewContentMode.UIViewContentModeScaleAspectFill;
-            case ScaleType.aspectFit:
-                return UIViewContentMode.UIViewContentModeScaleAspectFit;
-            case ScaleType.fill:
-                return UIViewContentMode.UIViewContentModeScaleToFill;
-            default:
-                break;
-        }
-    }
-}
-
-
 function getPlaceholderUIImage(value) {
     if (types.isString(value)) {
         if (utils.isFileOrResourcePath(value)) {
@@ -215,7 +203,6 @@ function getPlaceholderUIImage(value) {
 
     return undefined;
 }
-
 
 export function setCacheLimit(numberOfDays) {
 
