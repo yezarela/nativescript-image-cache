@@ -6,10 +6,10 @@ declare class UIImageView {
 }
 
 declare enum UIViewContentMode {
-    UIViewContentModeScaleAspectFit,
-    UIViewContentModeScaleAspectFill,
-    UIViewContentModeScaleToFill,
-    UIViewContentModeTopLeft,
+    ScaleAspectFit,
+    ScaleAspectFill,
+    ScaleToFill,
+    TopLeft,
 }
 
 declare class SDImageCache {

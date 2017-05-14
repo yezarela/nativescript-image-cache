@@ -64,7 +64,9 @@ declare module com {
                 class ControllerListener<T> {
                     constructor(context);
                 }
-                class BaseControllerListener { }
+                class BaseControllerListener {
+                    static extend(args)
+                }
             }
 
             module generic {

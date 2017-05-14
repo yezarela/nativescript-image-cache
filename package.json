@@ -1,6 +1,6 @@
 {
   "name": "nativescript-image-cache",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Nativescript image caching plugin using Fresco for Android and SDWebImageCache for iOS",
   "main": "ns-image-cache",
   "nativescript": {
@@ -10,7 +10,7 @@
     }
   },
   "scripts": {
-    "test": ""
+    "build": "tsc -p ."
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,23 @@
     "Fresco",
     "SDWebImageCache"
   ],
-  "author": "Yesarela Ritonga",
+  "contributors": [
+    {
+      "name": "Yesarela Ritonga",
+      "email": "yezarela@gmail.com",
+      "url": "https://github.com/yezarela"
+    },
+    {
+      "name": "Blake Nussey",
+      "email": "blake.nussey@gmail.com",
+      "url": "https://github.com/bnussey"
+    }
+  ],
+  "author": {
+    "name": "Yesarela Ritonga",
+    "email": "yezarela@gmail.com",
+    "url": "https://github.com/yezarela"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/yezarela/nativescript-image-cache/issues"

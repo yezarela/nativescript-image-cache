@@ -39,7 +39,7 @@ export class NSImage extends NSImageBase {
     constructor() {
         super();
         this.nativeView = new UIImageView();
-        this.nativeView.contentMode = UIViewContentMode.UIViewContentModeScaleAspectFit;
+        this.nativeView.contentMode = UIViewContentMode.ScaleAspectFit;
         this.nativeView.clipsToBounds = true;
         this.nativeView.userInteractionEnabled = true;
     }
