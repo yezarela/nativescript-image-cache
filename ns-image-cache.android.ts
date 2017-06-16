@@ -77,7 +77,9 @@ const ProxyBaseControllerListener = com.facebook.drawee.controller.BaseControlle
         }
     },
     onIntermediateImageSet: function (id, imageInfo) { },
-    onFailure: function (id, throwable) { }
+    onFailure: function (id, throwable) {
+        console.log("onFailure", id, throwable);
+    }
 });
 
 
@@ -212,7 +214,6 @@ export class NSImage extends NSImageBase {
 
 
 function setSource(image, value) {
-    image.android.setImageURI(null, null);
 
     if (types.isString(value)) {
         value = value.trim();
@@ -233,20 +234,25 @@ function setSource(image, value) {
                 fileName = value;
             }
 
-            image.android.setImageURI(android.net.Uri.parse(fileName), null);
+            let request = com.facebook.imagepipeline.request.ImageRequestBuilder
+                .newBuilderWithSource(android.net.Uri.parse(fileName))
+                .setProgressiveRenderingEnabled(true)
+                .build();
 
-            var controllerListener = new ProxyBaseControllerListener();
+            let controllerListener = new ProxyBaseControllerListener();
             controllerListener.setMyNSCachedImage(image);
 
-
-            var controller = com.facebook.drawee.backends.pipeline.Fresco.newDraweeControllerBuilder()
+            let controller = com.facebook.drawee.backends.pipeline.Fresco
+                .newDraweeControllerBuilder()
+                .setImageRequest(request)
                 .setControllerListener(controllerListener)
-                .setUri(android.net.Uri.parse(fileName))
+                .setOldController(image.android.getController())
+                .setTapToRetryEnabled(true)
                 .build();
+
             image.android.setController(controller);
-
             image.requestLayout();
-
+            
         } else {
             throw new Error("Path \"" + "\" is not a valid file or resource.");
         }
