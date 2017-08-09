@@ -234,10 +234,16 @@ function setSource(image, value) {
                 fileName = value;
             }
 
-            let request = com.facebook.imagepipeline.request.ImageRequestBuilder
-                .newBuilderWithSource(android.net.Uri.parse(fileName))
-                .setProgressiveRenderingEnabled(true)
-                .build();
+            let request, startRequest = com.facebook.imagepipeline.request.ImageRequestBuilder
+                .newBuilderWithSource(android.net.Uri.parse(fileName));
+
+            if (fileName.indexOf(".png") < 0) {
+                request = startRequest
+                    .setProgressiveRenderingEnabled(true)
+                    .build();
+            } else {
+                request = startRequest.build();
+            }
 
             let controllerListener = new ProxyBaseControllerListener();
             controllerListener.setMyNSCachedImage(image);
@@ -252,7 +258,7 @@ function setSource(image, value) {
 
             image.android.setController(controller);
             image.requestLayout();
-            
+
         } else {
             throw new Error("Path \"" + "\" is not a valid file or resource.");
         }
