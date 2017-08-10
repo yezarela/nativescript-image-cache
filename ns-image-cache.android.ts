@@ -223,6 +223,9 @@ function setSource(image, value) {
             if (0 === value.indexOf("~/")) {
                 fileName = fs.path.join(fs.knownFolders.currentApp().path, value.replace("~/", ""));
                 fileName = "file:" + fileName;
+            }
+            else if (0 === value.indexOf("/")) {
+                fileName = "file:" + value;
             } else if (0 == value.indexOf("res")) {
                 fileName = value;
                 var res = utils.ad.getApplicationContext().getResources();
