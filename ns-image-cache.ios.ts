@@ -234,7 +234,11 @@ export function setCacheLimit(numberOfDays) {
 export function clearCache() {
     var imageCache = SDImageCache.sharedImageCache();
     imageCache.clearMemory();
-    imageCache.clearDisk();
+    if ( typeof (imageCache.clearDisk) == 'undefined') {
+        imageCache.deleteOldFilesWithCompletion();        
+    } else {
+        imageCache.clearDisk();
+    }
 }
 
 
