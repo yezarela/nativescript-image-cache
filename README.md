@@ -19,7 +19,11 @@ Properties
   stretch = "aspectFill" | "aspectFit" | "fill" | "none"
   src = "res://image"
   placeholder = "res://placeholder"
-  placeholderStretch = "aspectFill" | "aspectFit" | "fill" | "none" // Android Only
+
+  // Android Only
+  placeholderStretch = "aspectFill" | "aspectFit" | "fill" | "none"
+  radius = "10"
+  rounded = "true"
 ```
 
 ### Initialization 
