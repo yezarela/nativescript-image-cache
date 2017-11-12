@@ -10,34 +10,29 @@ Nativescript image caching plugin using Fresco for Android and SDWebImageCache f
 tns plugin add nativescript-image-cache
 ```
 
-Support NativeScript 3.0.0 with Angular
+Support NativeScript ~3.0.0 with Angular
 
-## Usage
 
-| Property      | Value        | Default  |
-| ------------- |:-------------:| --------:|
-| stretch       | aspectFill, aspectFit, fill, none | none    |
-| src           | image source      |       |
-| placeholder   | image source      |       |
+## Properties
 
-Properties
-```
-stretch = "aspectFill" | "aspectFit" | "fill" | "none"
-src = "res://image"
-placeholder = "res://placeholder"
+| Property Name     	| Value        						| Platform  |
+|:----------------------|:----------------------------------|:----------|
+| `stretch`       		| aspectFill, aspectFit, fill, none |ios,android|
+| `src`           		| string      					    |ios,android|
+| `placeholder`   		| string      					    |ios,android|
+| `placeholderStretch`  | aspectFill, aspectFit, fill, none |android	|
+| `radius`   			| number      					    |android    |
+| `rounded`   			| boolean      					    |android    |
 
-// Android Only
-placeholderStretch = "aspectFill" | "aspectFit" | "fill" | "none"
-radius = "10"
-rounded = "true"
-```
 
-### Initialization 
+## Basic Usage
 
-#### Nativescript Angular
+### Nativescript Angular
 
-```
-import { initializeOnAngular } from "nativescript-image-cache";
+Initialization 
+
+```ts
+import { initializeOnAngular } from 'nativescript-image-cache';
 
 export class AppComponent {
     constructor () {
@@ -45,63 +40,63 @@ export class AppComponent {
     }
 }
 ```
-After initialisation, the markup tag <NSImage></NSImage> can be used in templates of components.
 
-```
+Example usage:
+
+```html
 <NSImage #myImage stretch="aspectFill" radius="20" src="res://logo">
 </NSImage>
 ```
 
-#### Nativescript VanillaJS/Typescript
+#### Nativescript Vanilla
 
-IF on android, need to initialise the plugin before using or clearing the cache, initialisation not required for iOS**
+Initialization (android only)
 
-**Initialising on android - in app.js**
+```js
+const imageCache = require('nativescript-image-cache');
 
-```
-const imageCache = require("nativescript-image-cache");
 if (application.android) {
-    application.on("launch", () => {
+    application.on('launch', () => {
         imageCache.initialize();
     });
 }
 ```
 
-After initialisation, add the namespace attribute    `xmlns:IC="nativescript-image-cache"` to the opening page tag of xml. The markup tag `<IC:NSImage></IC:NSImage>` should be used to denote images.
+Example usage:
 
-```
+```xml
 <Page xmlns:IC="nativescript-image-cache">
     <GridLayout rows='*' columns='*'> 
         <IC:NSImage stretch="fill" row="0"
-            col="0"  id="my-image-1" placeholder="urlToLocalPlaceholderImage" 
-            src="#image-url">
+            col="0" placeholder="res://placeholder" 
+            src="res://logo">
             </IC:NSImage>  
     </GridLayout>
 </Page>
 ```
 
-### Caching Image
+## Caching Image
 
 Default cache purge time can be specified in number of days.
 
-```
-import { setCacheLimit } from "nativescript-image-cache";
+```ts
+import { setCacheLimit } from 'nativescript-image-cache';
 
 const cacheLimitInDays : number = 7;
 setCacheLimit(cacheLimitInDays);
 ```
 
-### Clearing Cache
+## Clearing Cache
 
-Import the module, call the method `clearCache()`  , default time is for SDWebImageCache is 7 days, and for Fresco is 60 days,  after which cache is automatically cleared.
+Default cache time for SDWebImageCache is 7 days, and for Fresco is 60 days.
 
-```
-import { clearCache } from "nativescript-image-cache";
+```ts
+import { clearCache } from 'nativescript-image-cache';
 
 clearCache();
 ```
 
-**for android, you need to initialize in the application onlaunch event before clearing the cache**
+**(Android Only), you need to initialize in the application onlaunch event before clearing the cache**
 
 
 ## Credits 
