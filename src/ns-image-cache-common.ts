@@ -1,9 +1,8 @@
-import { View, Property, booleanConverter } from "ui/core/view";
-import { NSImage } from "./ns-image-cache";
+import { View, Property, booleanConverter } from 'ui/core/view';
+import { NSImage } from './ns-image-cache';
 
 export { NSImage };
 export class NSImageBase extends View implements NSImage {
-
     src: string;
     isLoading: boolean;
     stretch: string;
@@ -23,17 +22,16 @@ export class NSImageBase extends View implements NSImage {
     public set ios(value) {
         this.nativeView = value;
     }
-
 }
 
 export const srcProperty = new Property<NSImageBase, string>({
-    name: "src",
-    defaultValue: undefined,
+    name: 'src',
+    defaultValue: undefined
 });
 srcProperty.register(NSImageBase);
 
 export const isLoadingProperty = new Property<NSImageBase, boolean>({
-    name: "isLoading",
+    name: 'isLoading',
     defaultValue: true,
     valueConverter: booleanConverter
 });
