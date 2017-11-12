@@ -1,10 +1,26 @@
-// Place your settings in this file to overwrite default and user settings.
 {
-    "files.exclude": {
-        "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/.DS_Store": true,
-        "**/*.js": {"when": "$(basename).ts"}
-    }
+  "editor.detectIndentation": false,
+  "editor.tabSize": 4,
+  "editor.insertSpaces": false,
+  "editor.formatOnSave": true,
+
+  "prettier.singleQuote": true,
+  "prettier.printWidth": 120,
+  "prettier.tabWidth": 4,
+  "prettier.typescriptEnable": ["typescript", "typescriptreact"],
+
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    ".vscode/chrome": true
+  },
+
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/*.js": { "when": "$(basename).ts" }
+  }
 }

@@ -24,10 +24,13 @@ core theme, such as p-20, btn, h2, and list-group. You can view a full list of t
 class names available for styling your app at https://docs.nativescript.org/ui/theme.
 -->
 <StackLayout class="page">
-    <ListView [items]="items" class="list-group">
-        <ng-template let-item="item">
-            <Label [nsRouterLink]="['/item', item.id]" [text]="item.name"
-                class="list-group-item"></Label>
-        </ng-template>
-    </ListView>
+	<ListView [items]="items" class="list-group">
+		<ng-template let-item="item">
+			<StackLayout>
+				<Label [nsRouterLink]="['/item', item.id]" [text]="item.name" class="list-group-item"></Label>
+				<NSImage style="border-width: 5px; border-color: black" src="https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg"
+				 stretch="aspectFit" width="100" height="100" placeholder="res://logo" placeholderStretch="aspectFit"></NSImage>
+			</StackLayout>
+		</ng-template>
+	</ListView>
 </StackLayout>
