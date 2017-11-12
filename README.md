@@ -48,7 +48,7 @@ Example usage:
 </NSImage>
 ```
 
-#### Nativescript Vanilla
+### Nativescript Vanilla
 
 Initialization (android only)
 
