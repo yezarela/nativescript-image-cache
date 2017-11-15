@@ -252,7 +252,7 @@ export const clearCache = () => {
     const imageCache = SDImageCache.sharedImageCache();
     imageCache.clearMemory();
     if (typeof imageCache.clearDisk == 'undefined') {
-        imageCache.clearDiskOnCompletion();
+        imageCache.clearDiskOnCompletion(null);
     } else {
         imageCache.clearDisk();
     }
