@@ -7,6 +7,7 @@ import * as appSettings from 'application-settings';
 import * as enums from 'ui/enums';
 import * as types from 'utils/types';
 import * as fs from 'file-system';
+import lazy from "utils/lazy";
 
 export { srcProperty, isLoadingProperty };
 export let isInitialized = false;
@@ -58,21 +59,28 @@ export const placeholderStretchProperty = new Property<NSImageBase, string>({
 });
 placeholderStretchProperty.register(NSImageBase);
 
-const ProxyBaseControllerListener = com.facebook.drawee.controller.BaseControllerListener.extend({
-    _MyNSCachedImage: undefined,
-    setMyNSCachedImage: function(img) {
-        this._MyNSCachedImage = img;
-    },
-    onFinalImageSet: function(id, imageInfo, anim) {
-        if (undefined != this._MyNSCachedImage) {
-            this._MyNSCachedImage.isLoading = false;
-        }
-    },
-    onIntermediateImageSet: function(id, imageInfo) {},
-    onFailure: function(id, throwable) {
-        console.log('onFailure', id, throwable);
+let ProxyBaseControllerListener;
+function intializeProxyBaseControllerListener(): void {
+    if (ProxyBaseControllerListener) {
+        return;
     }
-});
+
+    ProxyBaseControllerListener = com.facebook.drawee.controller.BaseControllerListener.extend({
+        _MyNSCachedImage: undefined,
+        setMyNSCachedImage: function(img) {
+            this._MyNSCachedImage = img;
+        },
+        onFinalImageSet: function(id, imageInfo, anim) {
+            if (undefined != this._MyNSCachedImage) {
+                this._MyNSCachedImage.isLoading = false;
+            }
+        },
+        onIntermediateImageSet: function(id, imageInfo) {},
+        onFailure: function(id, throwable) {
+            console.log('onFailure', id, throwable);
+        }
+    });
+}
 
 export class NSImage extends NSImageBase {
     public nativeView: com.facebook.drawee.view.SimpleDraweeView;
@@ -230,6 +238,7 @@ const setSource = (image, value) => {
                 request = startRequest.build();
             }
 
+            intializeProxyBaseControllerListener();
             const controllerListener = new ProxyBaseControllerListener();
             controllerListener.setMyNSCachedImage(image);
 
