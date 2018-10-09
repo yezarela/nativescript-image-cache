@@ -8,6 +8,7 @@ import * as enums from 'ui/enums';
 import * as types from 'utils/types';
 import * as fs from 'file-system';
 import lazy from "utils/lazy";
+import * as imageSource from "image-source";
 
 export { srcProperty, isLoadingProperty };
 export let isInitialized = false;
@@ -255,6 +256,10 @@ const setSource = (image, value) => {
         } else {
             throw new Error('Path "' + '" is not a valid file or resource.');
         }
+    }
+    
+    if (value instanceof imageSource.ImageSource){
+        image.nativeView.setImageBitmap(value.android);
     }
 };
 

@@ -208,6 +208,11 @@ const setSource = (image, value) => {
         }
         image.requestLayout();
     }
+    
+    if (value instanceof imageSource.ImageSource){
+        image.isLoading = false;
+        image.ios.image = value.ios;
+    }
 };
 
 const getPlaceholderUIImage = value => {
